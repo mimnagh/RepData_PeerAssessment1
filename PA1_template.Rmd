@@ -37,13 +37,22 @@ abline(v=max_ave)
 The index of the max ave is `r max_ave`.
 
 ## Imputing missing values
-There are `r sum(is.na(data_all$steps))` missing values.
+There are `r sum(is.na(data_all$steps))` missing values. To fill in these missing values we will calculate the average steps per interval and replace the NAs with the average value for it's interval.
 ```{r}
+#lookup the average for each interval and insert it into a column in the data frame
 data_all$averagePerInterval <- averagePerInterval[as.character(data_all$interval)]
+
+#assign the average to the NAs in the steps column
 data_all$steps <- ifelse(is.na(data_all$steps),data_all$averagePerInterval,data_all$steps)
+
+#add up all the steps for each day
 totalStepsAll<-tapply(data_all$steps,data_all$date,sum)
+
+#generate histogram
 hist(totalStepsAll,main="Histogram of Total Number of Steps per Day (Imputing NA)",xlab="Total number of Steps",breaks=20)
 totalStepsAllSummary<-summary(totalStepsAll)
+
+#add some vertical lines
 abline(v=totalStepsAllSummary["Median"])
 abline(v=totalStepsAllSummary["Mean"])
 

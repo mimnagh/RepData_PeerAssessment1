@@ -230,13 +230,22 @@ abline(v=max_ave)
 
 <h2>Imputing missing values</h2>
 
-<p>There are 2304 missing values.</p>
+<p>There are 2304 missing values. To fill in these missing values we will calculate the average steps per interval and replace the NAs with the average value for it&#39;s interval.</p>
 
-<pre><code class="r">data_all$averagePerInterval &lt;- averagePerInterval[as.character(data_all$interval)]
+<pre><code class="r">#lookup the average for each interval and insert it into a column in the data frame
+data_all$averagePerInterval &lt;- averagePerInterval[as.character(data_all$interval)]
+
+#assign the average to the NAs in the steps column
 data_all$steps &lt;- ifelse(is.na(data_all$steps),data_all$averagePerInterval,data_all$steps)
+
+#add up all the steps for each day
 totalStepsAll&lt;-tapply(data_all$steps,data_all$date,sum)
+
+#generate histogram
 hist(totalStepsAll,main=&quot;Histogram of Total Number of Steps per Day (Imputing NA)&quot;,xlab=&quot;Total number of Steps&quot;,breaks=20)
 totalStepsAllSummary&lt;-summary(totalStepsAll)
+
+#add some vertical lines
 abline(v=totalStepsAllSummary[&quot;Median&quot;])
 abline(v=totalStepsAllSummary[&quot;Mean&quot;])
 </code></pre>
